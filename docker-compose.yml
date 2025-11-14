@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: ms-progresso-db
+    environment:
+      POSTGRES_DB: ms_progresso
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5433"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/main/resources/db/migration:/docker-entrypoint-initdb.d
+    networks:
+      - ms-progresso-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: ms-progresso-cache
+    ports:
+      - "6379:6379"
+    networks:
+      - ms-progresso-net
+
+volumes:
+  postgres_data:
+
+networks:
+  ms-progresso-net:
+    driver: bridge
